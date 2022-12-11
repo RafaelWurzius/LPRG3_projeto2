@@ -11,24 +11,56 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _firebaseAuth = FirebaseAuth.instance;
+  String nome = "";
+  String email = "";
+  @override
+  initState() {
+    pegarUsuario();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          "Home Page",
-          textAlign: TextAlign.center,
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              UserAccountsDrawerHeader(
+                accountName: Text(nome),
+                accountEmail: Text(email),
+              ),
+              ListTile(
+                dense: true,
+                title: Text("Sair"),
+                trailing: Icon(Icons.exit_to_app),
+                onTap: () {
+                  sair();
+                },
+              ),
+            ],
+          ),
         ),
-        TextButton(
-            onPressed: () {
-              sair();
-            },
-            child: Text("Sair"))
-      ],
-    ));
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Home Page"),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(nome, textAlign: TextAlign.center),
+          ],
+        ));
+  }
+
+  pegarUsuario() async {
+    User? usuario = await _firebaseAuth.currentUser;
+    if (usuario != null) {
+      setState(() {
+        nome = usuario.displayName!;
+        email = usuario.email!;
+      });
+    }
   }
 
   sair() async {
