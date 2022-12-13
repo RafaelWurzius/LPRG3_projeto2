@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:projeto/helpers/database_helper.dart';
 
 class Player extends StatefulWidget {
   // const Player({super.key});
@@ -19,6 +20,7 @@ class Player extends StatefulWidget {
 }
 
 class _PlayerState extends State<Player> {
+  final dbHelper = DatabaseHelper.instance;
   final audioPlayer1 = AudioPlayer();
   final audioPlayer2 = AudioPlayer();
 
@@ -71,6 +73,18 @@ class _PlayerState extends State<Player> {
         position2 = newPosition;
       });
     });
+
+    // -------------
+    // row to insert
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnName: widget.nomeArquivo.toString(),
+      DatabaseHelper.columnAudio: widget.audioPath.toString(),
+      DatabaseHelper.columnMusica: widget.musicaPath.toString()
+    };
+
+    final id = dbHelper.insert(row);
+    print('=================================inserted row id: $id');
+    // -------------
   }
 
   Future setAudio() async {

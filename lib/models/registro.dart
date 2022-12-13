@@ -1,30 +1,43 @@
+// @dart=2.9
 class Registro {
-  int id = 0;
-  String nome = '';
-  String audio = '';
-  String musica = '';
+  int _id;
+  String _nome;
+  String _audio;
+  String _musica;
 
-  Registro(
-    this.id,
-    this.nome,
-    this.audio,
-    this.musica,
-  );
+  Registro(this._id, this._nome, this._audio, this._musica);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      'id': id,
-      'nome': nome,
-      'audio': audio,
-      'musica': musica
+      'id': _id,
+      'nome': _nome,
+      'audio': _audio,
+      'musica': _musica
     };
     return map;
   }
 
   Registro.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
-    nome = map['nome'];
-    audio = map['audio'];
-    musica = map['musica'];
+    this._id = map['_id'];
+    this._nome = map['name'];
+    this._audio = map['audio'];
+    this._musica = map['musica'];
+    // print('Map ID: ' + map['_id'].toString());
+    // print('Map nome: ' + map['name'].toString());
+    // print('Map audio: ' + map['audio'].toString());
+    // print('Map musica: ' + map['musica'].toString());
   }
+
+  int get id => _id;
+
+  set id(int value) => _id = value;
+
+  String get nome => _nome;
+  set nome(String value) => _nome = value;
+
+  String get audio => _audio;
+  set audio(String value) => _audio = value;
+
+  String get musica => _musica;
+  set musica(String value) => _musica = value;
 }
