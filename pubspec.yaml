@@ -44,6 +44,24 @@ dependencies:
   permission_handler: ^9.2.0
   sqflite: ^2.2.2
   path_provider: ^2.0.11
+  http: ^0.13.5
+  flutter_native_splash: ^1.2.0
+  flutter_launcher_icons: ^0.9.1
+
+
+flutter_native_splash:
+  color: "#3F51B5"
+  image: "images/karaoke.png"
+  android: true
+  ios: true
+
+flutter_icons:
+  image_path: "images/karaoke.png"
+  ios: true
+  remove_alpha_ios: true
+  android: "launcher_icon"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "images/karaoke.png"
 
 dev_dependencies:
   flutter_test:

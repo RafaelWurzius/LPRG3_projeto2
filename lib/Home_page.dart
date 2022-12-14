@@ -5,13 +5,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/definir_nome.dart';
 import 'package:projeto/helpers/database_helper.dart';
+import 'package:projeto/models/animais.dart';
 import 'package:projeto/models/registro.dart';
-import 'package:projeto/repositorio/registro_repositorio.dart';
+import 'package:projeto/repositories/animal_repository.dart';
+import 'package:projeto/sobre_page.dart';
 import 'package:projeto/verificacao_page.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'player.dart';
 import 'gravacao.dart';
+
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({key});
@@ -23,6 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // ignore: prefer_collection_literals, deprecated_member_use
   List<Registro> listaDeRegistros = List<Registro>();
+  List<Todo> listaDeTodos = List<Todo>();
 
   // DatabaseHelper db = DatabaseHelper();
   // List<Registro> registros = <Registro>[]; //diferente dele
@@ -98,6 +105,7 @@ class _HomePageState extends State<HomePage> {
     // });
 
     buscartodos();
+    getAnimais();
   }
 
   @override
@@ -115,6 +123,35 @@ class _HomePageState extends State<HomePage> {
                 accountName: Text(nome),
                 accountEmail: Text(email),
               ),
+              // ListTile(
+              //   dense: true,
+              //   title: Text("Mostra animais"),
+              //   trailing: Icon(Icons.circle),
+              //   onTap: () {
+              //     getAnimais();
+              //     // final Todo obj1 = listaDeTodos[1];
+              //     // print(
+              //     //     '------------------------------------------Testando essa bosta: ' +
+              //     //         obj1.avatar);
+
+              //     // animais.todos.forEach((element) {
+              //     //   var todo = Todo.fromJason(element);
+
+              //     //   print('Caminho da imagem: ' +
+              //     //       todo.avatar +
+              //     //       '. ID do registro: ' +
+              //     //       todo.id);
+              //     // });
+              //   },
+              // ),
+              // ListTile(
+              //   dense: true,
+              //   title: Text("Excluir"),
+              //   trailing: Icon(Icons.home_outlined),
+              //   onTap: () {
+              //     _delete();
+              //   },
+              // ),
               ListTile(
                 dense: true,
                 title: Text("Home"),
@@ -138,6 +175,14 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 dense: true,
+                title: Text("Sobre"),
+                trailing: Icon(Icons.person),
+                onTap: () {
+                  sobrear();
+                },
+              ),
+              ListTile(
+                dense: true,
                 title: Text("Sair"),
                 trailing: Icon(Icons.exit_to_app),
                 onTap: () {
@@ -149,7 +194,10 @@ class _HomePageState extends State<HomePage> {
         ),
         appBar: AppBar(
           centerTitle: true,
-          title: Text("Home Page"),
+          title: Text(
+            "Suas gravações",
+            style: TextStyle(fontSize: 20),
+          ),
         ),
         body:
             // Column(
@@ -215,9 +263,53 @@ class _HomePageState extends State<HomePage> {
             ListView.separated(
           itemBuilder: (BuildContext context, int index) {
             final Registro obj = listaDeRegistros[index];
+
+            final Todo img = listaDeTodos[index + 1];
+
+            print('-----------------------------Lista de todos: id:' +
+                listaDeTodos[1].avatar.toString());
+
+            //---------------------
+            // Uri uri = Uri.https(
+            //     '6374e1fc08104a9c5f8c1820.mockapi.io', '/api/v1/animais/');
+            // final future = http.get(uri);
+
+            // Todos minhaLista;
+
+            // future.then((response) {
+            //   // if (response.statusCode == 200) {
+            //   // print('Página carregada!');
+            //   // print(json.decode(response.body));
+
+            //   var lista = json.decode(response.body) as List;
+
+            //   minhaLista = Todos(lista);
+
+            //   minhaLista.todos[1]['avatar'].toString(); //!!!!!!!!!!!!!!!!!!
+
+            //   // print(minhaLista.todos[1]);
+            //   // print(lista);
+            //   // return minhaLista;
+
+            //   // ACHO Q EU NÃO PRECISO DISSO
+            //   // minhaLista.todos.forEach((element) {
+            //   //   var todo = Todo.fromJason(element);
+
+            //   //   print('Caminho da imagem: ' +
+            //   //       todo.avatar +
+            //   //       '. ID do registro: ' +
+            //   //       todo.id);
+            //   // });
+            //   // } else {
+            //   //   print('Problema!');
+            //   // }
+            // });
+            //---------------------
             return ListTile(
-              leading: Image.asset(
-                'images/dog.png',
+              leading: Image.network(
+                // 'images/dog.png',
+                // img.avatar.toString(),
+                img.avatar.toString(),
                 width: 50,
                 height: 50,
               ),
@@ -246,9 +338,9 @@ class _HomePageState extends State<HomePage> {
         );
   }
 
-  printar() {
-    print("Oi");
-  }
+  // printar() {
+  //   print("Oi");
+  // }
 
   reproduzir(String nome, String audio, String musica) {
     Navigator.push(
@@ -258,6 +350,7 @@ class _HomePageState extends State<HomePage> {
                   audioPath: audio,
                   musicaPath: musica,
                   nomeArquivo: nome,
+                  jaSalvo: true,
                 )));
   }
   // reproduzir(String nome, String audio, String musica) {
@@ -297,6 +390,11 @@ class _HomePageState extends State<HomePage> {
         context, MaterialPageRoute(builder: (context) => const DefinirNome()));
   }
 
+  sobrear() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const SobrePage()));
+  }
+
   void _insert() async {
     // row to insert
     Map<String, dynamic> row = {
@@ -314,32 +412,6 @@ class _HomePageState extends State<HomePage> {
     final allRows = await dbHelper.queryAllRows();
     print('=================================query all rows:');
     allRows.forEach(print);
-  }
-
-  void buscartodos() async {
-    List registroRecuperados = await dbHelper.listarRegistros();
-
-    print(
-        '=====================================Todas os registros de registros Recuperados:');
-    registroRecuperados.forEach((print));
-
-    // ignore: deprecated_member_use, prefer_collection_literals
-    List<Registro> temporaria = List<Registro>();
-
-    for (var item in registroRecuperados) {
-      Registro r = Registro.fromMap(item);
-      print('Registro #: id:' + r.id.toString());
-      temporaria.add(r);
-    }
-
-    setState(() {
-      listaDeRegistros = temporaria;
-    });
-
-    print(
-        '=====================================Todas os registros de listaDeRegistros:');
-    listaDeRegistros.forEach((print));
-    temporaria = null;
   }
 
   void _update() async {
@@ -363,5 +435,107 @@ class _HomePageState extends State<HomePage> {
     final rowsDeleted = await dbHelper.delete(id);
     print(
         '=================================deleted $rowsDeleted row(s): row $id');
+  }
+
+  void buscartodos() async {
+    List registroRecuperados = await dbHelper.listarRegistros(); //1
+
+    print(
+        '=====================================Todas os registros de registros Recuperados:');
+    registroRecuperados.forEach((print));
+
+    // ignore: deprecated_member_use, prefer_collection_literals
+    List<Registro> temporaria = List<Registro>(); //2
+
+    //3
+    for (var item in registroRecuperados) {
+      Registro r = Registro.fromMap(item);
+      print('Registro #: id:' + r.id.toString());
+      temporaria.add(r);
+    }
+
+    //4
+    setState(() {
+      listaDeRegistros = temporaria;
+    });
+
+    // print(
+    //     '=====================================Todas os registros de listaDeRegistros:');
+    // listaDeRegistros.forEach((print));
+    temporaria = null;
+  }
+
+  void getAnimais() {
+    Uri uri =
+        Uri.https('6374e1fc08104a9c5f8c1820.mockapi.io', '/api/v1/animais/');
+    final future = http.get(uri);
+
+    future.then((response) {
+      if (response.statusCode == 200) {
+        print('Página carregada!');
+        // print(json.decode(response.body));
+
+        var lista = json.decode(response.body) as List; //1
+
+        List<Todo> animaisTemp = List<Todo>(); //2
+
+        //3
+        for (var item in lista) {
+          Todo a = Todo.fromJason(item);
+          // print('----------------------Todo #: id:' + a.avatar.toString());
+          animaisTemp
+              .add(a); //eu tinha comentado isso aqui, rever os ultimos passos
+        }
+
+        //4
+        setState(() {
+          listaDeTodos = animaisTemp;
+        });
+
+        // print('-----------------------------Lista de todos: id: ' +
+        //     listaDeTodos[1].avatar.toString());
+
+        // var minhaLista = Todos(lista);
+
+        // print(minhaLista.todos[1]);
+        // print(lista);
+        // return minhaLista;
+
+        // List<Todo> registros;
+
+        // ACHO Q EU NÃO PRECISO DISSO
+        // lista.forEach((element) {
+        //   var todo = Todo.fromJason(element);
+        //   registros.add(todo);
+
+        // print('Caminho da imagem: ' +
+        //     todo.avatar +
+        //     '. ID do registro: ' +
+        //     todo.id);
+        // });
+        // print(
+        //     '----------------------------------------Testabdo essa merda agora: ' +
+        //         registros[1].toString());
+      } else {
+        print('Problema!');
+      }
+    });
+  }
+}
+
+// class Todos {
+//   List todos = [];
+
+//   Todos(this.todos);
+// }
+
+class Todo {
+  final String id;
+  final String avatar;
+
+  Todo(this.id, this.avatar);
+
+  factory Todo.fromJason(Map json) {
+    return Todo(json['id'], json['avatar']);
   }
 }

@@ -98,6 +98,7 @@ class _MinhaGravacaoState extends State<MinhaGravacao> {
                   audioPath: audioPath,
                   musicaPath: musicaPath,
                   nomeArquivo: widget.nomeArquivo,
+                  jaSalvo: false,
                 )));
   }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:projeto/Home_page.dart';
 import 'package:projeto/helpers/database_helper.dart';
 
 class Player extends StatefulWidget {
@@ -11,10 +12,13 @@ class Player extends StatefulWidget {
       {super.key,
       required this.audioPath,
       required this.musicaPath,
-      required this.nomeArquivo});
+      required this.nomeArquivo,
+      required this.jaSalvo});
   String audioPath;
   String musicaPath;
   String nomeArquivo;
+  bool jaSalvo;
+
   @override
   State<Player> createState() => _PlayerState();
 }
@@ -82,8 +86,12 @@ class _PlayerState extends State<Player> {
       DatabaseHelper.columnMusica: widget.musicaPath.toString()
     };
 
-    final id = dbHelper.insert(row);
-    print('=================================inserted row id: $id');
+    if (widget.jaSalvo) {
+    } else {
+      final id = dbHelper.insert(row);
+      print('=================================inserted row id: $id');
+    }
+
     // -------------
   }
 
@@ -105,6 +113,16 @@ class _PlayerState extends State<Player> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Ouça seu som"),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(),
+                ),
+              );
+            },
+            icon: Icon(Icons.home_outlined)),
       ),
       body: Center(
         child: Column(
@@ -112,7 +130,7 @@ class _PlayerState extends State<Player> {
           children: [
             const SizedBox(height: 32),
             const Text(
-              "SONG",
+              "KARAOQUÊ",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

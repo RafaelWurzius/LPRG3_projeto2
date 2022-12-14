@@ -20,7 +20,7 @@ class _DefinirNomeState extends State<DefinirNome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Digite o nome da nova gravação"),
+        title: const Text("Digite o nome"),
       ),
       body: ListView(
         padding: const EdgeInsets.all(12),
