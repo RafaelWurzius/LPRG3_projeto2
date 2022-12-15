@@ -7,7 +7,6 @@ import 'package:projeto/Home_page.dart';
 import 'package:projeto/helpers/database_helper.dart';
 
 class Player extends StatefulWidget {
-  // const Player({super.key});
   Player(
       {super.key,
       required this.audioPath,
@@ -78,7 +77,6 @@ class _PlayerState extends State<Player> {
       });
     });
 
-    // -------------
     // row to insert
     Map<String, dynamic> row = {
       DatabaseHelper.columnName: widget.nomeArquivo.toString(),
@@ -89,23 +87,13 @@ class _PlayerState extends State<Player> {
     if (widget.jaSalvo) {
     } else {
       final id = dbHelper.insert(row);
-      print('=================================inserted row id: $id');
+      print('inserted row id: $id');
     }
-
-    // -------------
   }
 
   Future setAudio() async {
     audioPlayer2.setUrl(widget.audioPath, isLocal: true);
-    // print("========================Nome do arquivo q veio pra essa tela: " +
-    //     widget.nomeArquivo);
-    // print("===========================Path da música: " + widget.musicaPath);
-    // print('===========================Path do áudio: ' + widget.audioPath);
-
-    // audioPlayer1.setUrl('/data/user/0/com.example.projeto/cache/file_picker/Dance Macabre with lyrics', isLocal: true);
     audioPlayer1.setUrl(widget.musicaPath, isLocal: true);
-
-    // audioPlayer2.setUrl('/data/user/0/com.example.projeto/cache/audio',isLocal: true);
   }
 
   @override
@@ -200,9 +188,6 @@ class _PlayerState extends State<Player> {
                     await audioPlayer1.pause();
                     await audioPlayer2.pause();
                   } else if (!isPlaying1 || !isPlaying2) {
-                    // String url =
-                    //     'https://drive.google.com/file/d/1no0ocyArwZYY5k0PPsDXihM91MNXJYNt/view';
-                    // await audioPlayer.play(url);
                     audioPlayer1.resume();
                     audioPlayer2.resume();
                   }

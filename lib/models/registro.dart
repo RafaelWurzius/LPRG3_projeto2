@@ -22,10 +22,6 @@ class Registro {
     this._nome = map['name'];
     this._audio = map['audio'];
     this._musica = map['musica'];
-    // print('Map ID: ' + map['_id'].toString());
-    // print('Map nome: ' + map['name'].toString());
-    // print('Map audio: ' + map['audio'].toString());
-    // print('Map musica: ' + map['musica'].toString());
   }
 
   int get id => _id;

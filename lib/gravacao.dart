@@ -39,7 +39,6 @@ class _MinhaGravacaoState extends State<MinhaGravacao> {
 
   @override
   void initState() {
-    // print("========================Nome do arquivo q veio pra essa tela: " + widget.nomeArquivo);
     super.initState();
     initRecorder();
     getMusica();
@@ -52,7 +51,6 @@ class _MinhaGravacaoState extends State<MinhaGravacao> {
     if (result != null) {
       final file = File(result.files.single.path!);
       musicaPath = file.path;
-      //print("===========================Path da música: " + file.path);
     }
   }
 
@@ -80,7 +78,7 @@ class _MinhaGravacaoState extends State<MinhaGravacao> {
   Future record() async {
     if (!isRecorderReady) return;
     await recorder.startRecorder(
-        toFile: widget.nomeArquivo); //AQUI É ESCOLHIDO O NOME DO ARQUIVO!!
+        toFile: widget.nomeArquivo); //aqui é escolhido o nome do arquivo
   }
 
   Future stop() async {
@@ -89,7 +87,7 @@ class _MinhaGravacaoState extends State<MinhaGravacao> {
 
     final audioFile = File(path!);
     String audioPath = audioFile.path;
-    print('===========================Recorded audio path: $audioFile');
+    print('Recorded audio path: $audioFile');
 
     Navigator.push(
         context,
@@ -136,7 +134,7 @@ class _MinhaGravacaoState extends State<MinhaGravacao> {
               onPressed: () async {
                 if (recorder.isRecording) {
                   await stop();
-                  //aqui vai pra tela de reprodução passando o path
+                  //Redirecionado para a tela de reprodução passando o path do audio
 
                 } else {
                   await record();

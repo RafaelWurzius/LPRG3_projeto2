@@ -1,10 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/gravacao.dart';
-
-import 'Home_page.dart';
-import 'cadastro_page.dart';
 
 class DefinirNome extends StatefulWidget {
   const DefinirNome({super.key});
